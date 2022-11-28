@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="api.js"></script>
+    <script src="axios.js"></script>
+</head>
+<body>
+<script>
+    // const doAfter = (seconds) => {
+    //     let myPromise = new Promise((resolve, reject) => {
+    //         setTimeout(() => {
+    //             const number = Math.random()
+    //             resolve(number)
+    //         }, seconds * 1000)
+    //
+    //     });
+    //     return myPromise
+    // }
+    // doAfter(5).then(() => console.log('я сработал через 5 секунд'));
+    // doAfter(3).then(() => console.log('а я сработал через 3 секунд'));
+    // doAfter(10).then(() => console.log('я сработал через 10 секунд'));
+    //
+    // let promise3 = doAfter(3);
+    // promise3.then( () => console.log('я сработал через 3 секунд') );
+    // promise3.then( () => console.log('и я тоже следом сработал через 3 секунд') );
+    // promise3.then( () => console.log('и я') );
+
+
+    // let msPromise = api.getVacanciesCountFromMicrosoft()
+    // let gPromise = api.getVacanciesCountFromGoogle()
+    //
+    //
+    // const allPromise = Promise.all([msPromise, gPromise])
+    //
+    // allPromise.then((res) => {
+    //     let resFromMs = res[0].data.vacancies;
+    //     let resFromG = res[1].data.vacancies;
+    //
+    //     api.sendStudentsCountToItKamasutra(resFromMs + resFromG)
+    //         .then(res => {
+    //             console.log(res.data);
+    //         }).catch(() => {
+    //             alert('some ERRORE')
+    //     })
+    // })
+
+
+    function loadVacanciesPromise() {
+        let msVacancies;
+        api.getVacanciesCountFromMicrosoft()
+            .then(msCount => {
+                msVacancies = msCount;
+                console.log(msCount);
+                return api.getVacanciesCountFromGoogle();
+            })
+            .then(gCount => {
+                console.log(gCount);
+                return api.sendStudentsCountToItKamasutra(gCount + msVacancies)
+            })
+            .then(res => {
+                console.log('from it-kamasutra: ', res.data);
+            })
+    }
+
+    async function loadVacanciesPromiseAsyncAwait() {
+        let msCount = await api.getVacanciesCountFromMicrosoft();
+        let gCount = await api.getVacanciesCountFromGoogle();
+        let res = await api.sendStudentsCountToItKamasutra(gCount + msCount);
+        console.log('from it-kamasutra: ', res.data)
+    }
+    loadVacanciesPromiseAsyncAwait()
+
+</script>
+</body>
+</html>
